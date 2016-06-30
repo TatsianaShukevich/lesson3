@@ -1,0 +1,6 @@
+lesson3.currencies_page:
+  path: '/currencies'
+  defaults:
+    _controller: '\Drupal\lesson3\Controller\CurrenciesController::showCurrenciesPage'
+  requirements:
+    _permission: 'view content'

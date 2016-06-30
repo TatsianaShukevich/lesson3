@@ -1,0 +1,3 @@
+services:
+    lesson3.currencies_service:
+        class: Drupal\lesson3\CurrenciesService
