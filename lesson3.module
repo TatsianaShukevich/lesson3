@@ -12,12 +12,12 @@ function lesson3_cron() {
         // We access our service for getting currencies from NBRB web service.
         $service = \Drupal::service('lesson3.currencies_service');
 
-        $currenciesOnDate = $service->getCurrenciesOnDate();
-        $service->saveCurrencyRateEntities($currenciesOnDate['currencies'], $currenciesOnDate['date']);
+//        $currenciesOnDate = $service->getCurrenciesOnDate();
+//        $service->saveCurrencyRateEntities($currenciesOnDate['currencies'], $currenciesOnDate['date']);
         
         //uncomment if need to delete all Currencies and/or CurrencyRate Entities.
-        //$service->deleteCurrenciesEntities();
-        //$service->deleteCurrencyRateEntities();
+        $service->deleteCurrenciesEntities();
+        $service->deleteCurrencyRateEntities();
     }
     catch (\Exception $e) {
         drupal_set_message($e->getMessage());

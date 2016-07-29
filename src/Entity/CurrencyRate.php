@@ -16,7 +16,7 @@ use Drupal\user\UserInterface;
  *
  * @ContentEntityType(
  *   id = "currency_rate",
- *   label = @Translation("Currency rate"),
+ *   label = @Translation("Currency rate"), *
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\lesson3\CurrencyRateListBuilder",
@@ -199,6 +199,7 @@ class CurrencyRate extends ContentEntityBase implements CurrencyRateInterface {
         $fields['currency'] = BaseFieldDefinition::create('string')
             ->setLabel(t('Currency'))
             ->setDescription(t('The currency name.'))
+            ->setPropertyConstraints('value', array('Length' => array('max' => 20)))
             ->setSettings(array(
                 'default_value' => '',
                 'max_length' => 255,
@@ -213,6 +214,7 @@ class CurrencyRate extends ContentEntityBase implements CurrencyRateInterface {
                 'type' => 'string_textfield',
                 'weight' => 3,
             ))
+
             ->setDisplayConfigurable('form', TRUE)
             ->setDisplayConfigurable('view', TRUE);
 
