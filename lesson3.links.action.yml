@@ -1,0 +1,11 @@
+entity.currency_rate.add_form:
+  route_name: entity.currency_rate.add_form
+  title: 'Add Currency rate'
+  appears_on:
+    - entity.currency_rate.collection
+entity.currencies.add_form:
+  route_name: 'entity.currencies.add_form'
+  title: 'Add Currencies'
+  appears_on:
+    - entity.currencies.collection
+

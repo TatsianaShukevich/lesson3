@@ -8,8 +8,8 @@ namespace Drupal\lesson3\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-
+use Drupal\lesson3\Entity\CurrencyRate;
+use Drupal\lesson3\Entity\Currencies;
 /**
  * Controller routines for lesson3 module routes.
  */
@@ -45,23 +45,35 @@ class CurrenciesController extends ControllerBase {
      * @return array
      */
     public function showCurrenciesPage() {
+        try {
+            $currencyRateEntities = $this->currenciesService->getCurrencyRateEntitiesOndate('on_page');
+            $header = array(
+                $this->t('Currency'),
+                $this->t('Rate'),
+                $this->t('Rate difference'),
+            );
+            foreach ($currencyRateEntities as $entity) {
+                $rows[] = array(
+                    'data' => array(
+                        $entity->currency->value,
+                        $entity->rate->value,
+                        $entity->diff_rate->value,
+                    ),
+                    'no_striping' => TRUE,
+                );
+            }
+            return array(
+                '#type' => 'table',
+                '#header' => $header,
+                '#rows' => $rows,
+            );
 
-        $currencies = $this->config('lesson3.settings')->get('lesson3.currencies');
-        $date = $this->config('lesson3.settings')->get('lesson3.date');
-
-        $listCurrencies = '';
-        if (!isset($currencies) || empty($currencies)) {
-            $currencies = $this->currenciesService->getCurrencies();
         }
-
-        foreach ($currencies as $key => $value) {
-            $listCurrencies .= $value['Name'] . ': ' . $value['Rate'] . '</br>';
+        catch (\Exception $e) {
+            return array(
+                '#markup' => $e->getMessage(),
+            );
         }
-
-        return array(
-            '#markup' => $date . '</br>'. $listCurrencies
-        );
-
-  
     }
+
 }

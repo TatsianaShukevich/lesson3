@@ -67,63 +67,75 @@ class CurrenciesBlock extends BlockBase implements ContainerFactoryPluginInterfa
     /**
      * {@inheritdoc}
      */
-    public function build() {       
-        $configBlock = $this->getConfiguration();
-        $output = '';
-        foreach ($configBlock as $key => $value) {
-            if (preg_match('/^check/', $key) && !empty($value['Checked'])) {
-                $output .= $value['Name'] . ': ' . $value['Rate'] . '</br>';
+    public function build() {
+        try {
+            $currencyRateEntities = $this->currenciesService->getCurrencyRateEntitiesOndate('in_block');
+
+            foreach ($currencyRateEntities as $entity) {
+                $rows[] = array(
+                    'data' => array(
+                        $entity->currency->value,
+                        $entity->rate->value,
+                    ),
+                    'no_striping' => TRUE,
+                );
             }
+            return array(
+                '#type' => 'table',
+                '#rows' => $rows,
+            );
+
         }
-
-        return array(
-            '#markup' => $output,
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-
-    public function blockForm($form, FormStateInterface $form_state) {
-
-        $configBlock = $this->getConfiguration();  
-        $currencies = $this->config->get('lesson3.currencies');
-
-        if (!isset($currencies) || empty($currencies)) {
-            $currencies = $this->currenciesService->getCurrencies();
-        }
-
-        $form = parent::blockForm($form, $form_state);
-
-        foreach ($currencies as $currency) {
-            $arrayCharCode = $configBlock['check' . $currency['CharCode']]; 
-            $form['check' . $currency['CharCode']] = array(
-                '#type' => 'checkbox',
-                '#title' => $currency['Name'],
-                '#default_value' => $arrayCharCode['Checked'],
+        catch (\Exception $e) {
+            return array(
+                '#markup' => $e->getMessage(),
             );
         }
-
-        return $form;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function blockSubmit($form, FormStateInterface $form_state) {
-        $currencies = $this->config->get('lesson3.currencies');
 
-        if (!isset($currencies) || empty($currencies)) {
-            $currencies = $this->currenciesService->getCurrencies();
-        }
-
-        foreach ($currencies as $currency) {
-            $this->setConfigurationValue('check' . $currency['CharCode'], array(
-                'Checked' => $form_state->getValue('check' . $currency['CharCode']),
-                'Name' => $currency['Name'],
-                'Rate' => $currency['Rate'],
-            ));
-        }
-    }
+//    public function blockForm($form, FormStateInterface $form_state) {
+//
+//        $configBlock = $this->getConfiguration();
+//        $currencies = $this->config->get('lesson3.currencies');
+//
+////        if (!isset($currencies) || empty($currencies)) {
+////            $currencies = $this->currenciesService->getCurrencies();
+////        }
+//
+//        $form = parent::blockForm($form, $form_state);
+//
+//        foreach ($currencies as $currency) {
+//            $arrayCharCode = $configBlock['check' . $currency['CharCode']];
+//            $form['check' . $currency['CharCode']] = array(
+//                '#type' => 'checkbox',
+//                '#title' => $currency['Name'],
+//                '#default_value' => $arrayCharCode['Checked'],
+//            );
+//        }
+//
+//        return $form;
+//    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function blockSubmit($form, FormStateInterface $form_state) {
+//        $currencies = $this->config->get('lesson3.currencies');
+//
+////        if (!isset($currencies) || empty($currencies)) {
+////            $currencies = $this->currenciesService->getCurrencies();
+////        }
+//
+//        foreach ($currencies as $currency) {
+//            $this->setConfigurationValue('check' . $currency['CharCode'], array(
+//                'Checked' => $form_state->getValue('check' . $currency['CharCode']),
+//                'Name' => $currency['Name'],
+//                'Rate' => $currency['Rate'],
+//            ));
+//        }
+//    }
 }
