@@ -4,3 +4,10 @@ lesson3.currencies_page:
     _controller: '\Drupal\lesson3\Controller\CurrenciesController::showCurrenciesPage'
   requirements:
     _permission: 'view content'
+
+lesson3.settings_form:
+  path: '/admin/config/currency'
+  defaults:
+    _form: '\Drupal\lesson3\Form\CurrencyConfigForm'
+  requirements:
+    _permission: 'administer site configuration'
